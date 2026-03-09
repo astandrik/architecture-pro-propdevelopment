@@ -3,7 +3,7 @@
     "kind": "Event",
     "apiVersion": "audit.k8s.io/v1",
     "level": "Metadata",
-    "auditID": "06250aab-79c8-46d5-ae9a-112bdae3d53b",
+    "auditID": "ec71e9a2-4a19-40e3-9c1a-ee3871d4eb40",
     "stage": "ResponseComplete",
     "requestURI": "/apis/authorization.k8s.io/v1/selfsubjectaccessreviews",
     "verb": "create",
@@ -15,7 +15,7 @@
       ],
       "extra": {
         "authentication.kubernetes.io/credential-id": [
-          "X509SHA256=7b60022718c98845b8681cbe4278cc86146f55d1146f7954cfebfac30d0dbcfc"
+          "X509SHA256=d1b3c7e2bddde6d59c88f88a2bd2b151b096c87a8284eaf81744414665df60c7"
         ]
       }
     },
@@ -28,7 +28,7 @@
       ]
     },
     "sourceIPs": [
-      "192.168.49.1"
+      "192.168.58.1"
     ],
     "userAgent": "kubectl/v1.30.5 (darwin/arm64) kubernetes/74e84a9",
     "objectRef": {
@@ -40,8 +40,8 @@
       "metadata": {},
       "code": 201
     },
-    "requestReceivedTimestamp": "2026-03-09T12:41:21.304736Z",
-    "stageTimestamp": "2026-03-09T12:41:21.305393Z",
+    "requestReceivedTimestamp": "2026-03-09T15:30:24.222310Z",
+    "stageTimestamp": "2026-03-09T15:30:24.223094Z",
     "annotations": {
       "authorization.k8s.io/decision": "allow",
       "authorization.k8s.io/reason": "RBAC: allowed by ClusterRoleBinding \"system:basic-user\" of ClusterRole \"system:basic-user\" to Group \"system:authenticated\""
@@ -51,7 +51,7 @@
     "kind": "Event",
     "apiVersion": "audit.k8s.io/v1",
     "level": "RequestResponse",
-    "auditID": "c1901b71-dba7-4ddc-9c0f-fb1a179c2f31",
+    "auditID": "9623e181-b717-4bda-9d6d-d4c2721d28d2",
     "stage": "ResponseComplete",
     "requestURI": "/api/v1/namespaces/kube-system/secrets?limit=500",
     "verb": "list",
@@ -63,7 +63,7 @@
       ],
       "extra": {
         "authentication.kubernetes.io/credential-id": [
-          "X509SHA256=7b60022718c98845b8681cbe4278cc86146f55d1146f7954cfebfac30d0dbcfc"
+          "X509SHA256=d1b3c7e2bddde6d59c88f88a2bd2b151b096c87a8284eaf81744414665df60c7"
         ]
       }
     },
@@ -76,7 +76,7 @@
       ]
     },
     "sourceIPs": [
-      "192.168.49.1"
+      "192.168.58.1"
     ],
     "userAgent": "kubectl/v1.30.5 (darwin/arm64) kubernetes/74e84a9",
     "objectRef": {
@@ -106,8 +106,8 @@
       },
       "code": 403
     },
-    "requestReceivedTimestamp": "2026-03-09T12:41:21.410942Z",
-    "stageTimestamp": "2026-03-09T12:41:21.411971Z",
+    "requestReceivedTimestamp": "2026-03-09T15:30:24.310958Z",
+    "stageTimestamp": "2026-03-09T15:30:24.311389Z",
     "annotations": {
       "authorization.k8s.io/decision": "forbid",
       "authorization.k8s.io/reason": ""
@@ -117,7 +117,7 @@
     "kind": "Event",
     "apiVersion": "audit.k8s.io/v1",
     "level": "RequestResponse",
-    "auditID": "805c09f2-bf24-42ba-a33c-49eca86bce68",
+    "auditID": "c96599af-157c-4117-bfe6-4d6387f92e23",
     "stage": "ResponseComplete",
     "requestURI": "/api/v1/namespaces/secure-ops/pods?fieldManager=kubectl-client-side-apply&fieldValidation=Strict",
     "verb": "create",
@@ -129,12 +129,12 @@
       ],
       "extra": {
         "authentication.kubernetes.io/credential-id": [
-          "X509SHA256=7b60022718c98845b8681cbe4278cc86146f55d1146f7954cfebfac30d0dbcfc"
+          "X509SHA256=d1b3c7e2bddde6d59c88f88a2bd2b151b096c87a8284eaf81744414665df60c7"
         ]
       }
     },
     "sourceIPs": [
-      "192.168.49.1"
+      "192.168.58.1"
     ],
     "userAgent": "kubectl/v1.30.5 (darwin/arm64) kubernetes/74e84a9",
     "objectRef": {
@@ -190,10 +190,10 @@
       "metadata": {
         "name": "privileged-pod",
         "namespace": "secure-ops",
-        "uid": "14c8f433-a358-4980-affe-84bea2374030",
-        "resourceVersion": "398",
+        "uid": "167dcb22-aa4a-403c-b937-3635e42a5e09",
+        "resourceVersion": "418",
         "generation": 1,
-        "creationTimestamp": "2026-03-09T12:41:21Z",
+        "creationTimestamp": "2026-03-09T15:30:24Z",
         "annotations": {
           "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{},\"name\":\"privileged-pod\",\"namespace\":\"secure-ops\"},\"spec\":{\"containers\":[{\"command\":[\"sleep\",\"3600\"],\"image\":\"alpine\",\"name\":\"pwn\",\"securityContext\":{\"privileged\":true}}],\"restartPolicy\":\"Never\"}}\n"
         },
@@ -202,7 +202,7 @@
             "manager": "kubectl-client-side-apply",
             "operation": "Update",
             "apiVersion": "v1",
-            "time": "2026-03-09T12:41:21Z",
+            "time": "2026-03-09T15:30:24Z",
             "fieldsType": "FieldsV1",
             "fieldsV1": {
               "f:metadata": {
@@ -242,7 +242,7 @@
       "spec": {
         "volumes": [
           {
-            "name": "kube-api-access-45bqn",
+            "name": "kube-api-access-qgzz4",
             "projected": {
               "sources": [
                 {
@@ -291,7 +291,7 @@
             "resources": {},
             "volumeMounts": [
               {
-                "name": "kube-api-access-45bqn",
+                "name": "kube-api-access-qgzz4",
                 "readOnly": true,
                 "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
               }
@@ -334,8 +334,8 @@
         "qosClass": "BestEffort"
       }
     },
-    "requestReceivedTimestamp": "2026-03-09T12:41:21.507638Z",
-    "stageTimestamp": "2026-03-09T12:41:21.511007Z",
+    "requestReceivedTimestamp": "2026-03-09T15:30:24.387395Z",
+    "stageTimestamp": "2026-03-09T15:30:24.388931Z",
     "annotations": {
       "authorization.k8s.io/decision": "allow",
       "authorization.k8s.io/reason": "",
@@ -346,9 +346,9 @@
     "kind": "Event",
     "apiVersion": "audit.k8s.io/v1",
     "level": "Metadata",
-    "auditID": "129f346d-c4cb-4322-ba9f-7ba8dc1a50b6",
+    "auditID": "952738b6-40ed-4032-894a-b994bfe0b9d2",
     "stage": "ResponseComplete",
-    "requestURI": "/api/v1/namespaces/kube-system/pods/coredns-66bc5c9577-7c5tz/exec?command=cat&command=%2Fetc%2Fresolv.conf&container=coredns&stderr=true&stdout=true",
+    "requestURI": "/api/v1/namespaces/kube-system/pods/coredns-66bc5c9577-26jc2/exec?command=%2Fcoredns&command=-version&container=coredns&stderr=true&stdout=true",
     "verb": "get",
     "user": {
       "username": "minikube-user",
@@ -358,18 +358,18 @@
       ],
       "extra": {
         "authentication.kubernetes.io/credential-id": [
-          "X509SHA256=7b60022718c98845b8681cbe4278cc86146f55d1146f7954cfebfac30d0dbcfc"
+          "X509SHA256=d1b3c7e2bddde6d59c88f88a2bd2b151b096c87a8284eaf81744414665df60c7"
         ]
       }
     },
     "sourceIPs": [
-      "192.168.49.1"
+      "192.168.58.1"
     ],
     "userAgent": "kubectl/v1.30.5 (darwin/arm64) kubernetes/74e84a9",
     "objectRef": {
       "resource": "pods",
       "namespace": "kube-system",
-      "name": "coredns-66bc5c9577-7c5tz",
+      "name": "coredns-66bc5c9577-26jc2",
       "apiVersion": "v1",
       "subresource": "exec"
     },
@@ -377,8 +377,8 @@
       "metadata": {},
       "code": 101
     },
-    "requestReceivedTimestamp": "2026-03-09T12:41:21.623186Z",
-    "stageTimestamp": "2026-03-09T12:41:21.691147Z",
+    "requestReceivedTimestamp": "2026-03-09T15:30:24.498967Z",
+    "stageTimestamp": "2026-03-09T15:30:24.595745Z",
     "annotations": {
       "authorization.k8s.io/decision": "allow",
       "authorization.k8s.io/reason": ""
@@ -388,7 +388,7 @@
     "kind": "Event",
     "apiVersion": "audit.k8s.io/v1",
     "level": "RequestResponse",
-    "auditID": "acce5013-c005-4187-8738-9f87d7f61870",
+    "auditID": "7fe33492-28a6-4a1e-8b9a-15901ad73b01",
     "stage": "ResponseComplete",
     "requestURI": "/apis/rbac.authorization.k8s.io/v1/namespaces/secure-ops/rolebindings?fieldManager=kubectl-client-side-apply&fieldValidation=Strict",
     "verb": "create",
@@ -400,12 +400,12 @@
       ],
       "extra": {
         "authentication.kubernetes.io/credential-id": [
-          "X509SHA256=7b60022718c98845b8681cbe4278cc86146f55d1146f7954cfebfac30d0dbcfc"
+          "X509SHA256=d1b3c7e2bddde6d59c88f88a2bd2b151b096c87a8284eaf81744414665df60c7"
         ]
       }
     },
     "sourceIPs": [
-      "192.168.49.1"
+      "192.168.58.1"
     ],
     "userAgent": "kubectl/v1.30.5 (darwin/arm64) kubernetes/74e84a9",
     "objectRef": {
@@ -448,9 +448,9 @@
       "metadata": {
         "name": "escalate-binding",
         "namespace": "secure-ops",
-        "uid": "99a41549-8cbe-442c-9d78-3dbded18ef5f",
-        "resourceVersion": "404",
-        "creationTimestamp": "2026-03-09T12:41:21Z",
+        "uid": "30299dd1-87b6-4dff-8404-e250c4111d0c",
+        "resourceVersion": "423",
+        "creationTimestamp": "2026-03-09T15:30:24Z",
         "annotations": {
           "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"rbac.authorization.k8s.io/v1\",\"kind\":\"RoleBinding\",\"metadata\":{\"annotations\":{},\"name\":\"escalate-binding\",\"namespace\":\"secure-ops\"},\"roleRef\":{\"apiGroup\":\"rbac.authorization.k8s.io\",\"kind\":\"ClusterRole\",\"name\":\"cluster-admin\"},\"subjects\":[{\"kind\":\"ServiceAccount\",\"name\":\"monitoring\",\"namespace\":\"secure-ops\"}]}\n"
         },
@@ -459,7 +459,7 @@
             "manager": "kubectl-client-side-apply",
             "operation": "Update",
             "apiVersion": "rbac.authorization.k8s.io/v1",
-            "time": "2026-03-09T12:41:21Z",
+            "time": "2026-03-09T15:30:24Z",
             "fieldsType": "FieldsV1",
             "fieldsV1": {
               "f:metadata": {
@@ -487,8 +487,8 @@
         "name": "cluster-admin"
       }
     },
-    "requestReceivedTimestamp": "2026-03-09T12:41:21.788046Z",
-    "stageTimestamp": "2026-03-09T12:41:21.790374Z",
+    "requestReceivedTimestamp": "2026-03-09T15:30:24.700700Z",
+    "stageTimestamp": "2026-03-09T15:30:24.702903Z",
     "annotations": {
       "authorization.k8s.io/decision": "allow",
       "authorization.k8s.io/reason": ""

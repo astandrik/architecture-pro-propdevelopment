@@ -23,10 +23,19 @@ check_rejected() {
 check_admitted() {
   local manifest="$1"
   local label="$2"
+  local pod_name
+  pod_name=$(awk '/^  name:/{print $2; exit}' "$manifest")
+
   if kubectl apply -f "$manifest" 2>/dev/null; then
-    echo "  PASS: $label — admitted"
-    kubectl delete -f "$manifest" --ignore-not-found --wait=false 2>/dev/null || true
-    PASS=$((PASS + 1))
+    if kubectl wait -n audit-zone --for=condition=Ready "pod/${pod_name}" --timeout=90s >/dev/null 2>&1; then
+      echo "  PASS: $label — admitted and Ready"
+      kubectl delete -f "$manifest" --ignore-not-found --wait=false 2>/dev/null || true
+      PASS=$((PASS + 1))
+    else
+      echo "  FAIL: $label — admitted, but pod did not become Ready"
+      kubectl delete -f "$manifest" --ignore-not-found --wait=false 2>/dev/null || true
+      FAIL=$((FAIL + 1))
+    fi
   else
     echo "  FAIL: $label — rejected (expected admission)"
     FAIL=$((FAIL + 1))

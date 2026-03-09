@@ -2,9 +2,9 @@
 
 ## Обоснование
 
-В Задании 6 (`analysis.md`, п. 2-3) зафиксировано: нет admission control и нет PodSecurity -- привилегированный pod создаётся без ограничений. Задания 4-5 закрыли RBAC и сетевую изоляцию, Задание 6 добавило аудит. Задание 7 добавляет preventive control на уровне pod spec.
+В задании 6 (`analysis.md`, п. 2-3) зафиксировано: нет admission control и нет PodSecurity, поэтому привилегированный pod создаётся без ограничений. Задания 4-5 закрыли RBAC и сетевую изоляцию, задание 6 добавило аудит. Здесь добавляется проверка pod spec до создания pod'а.
 
-Два слоя нужны потому, что встроенный PSA `restricted` не проверяет `readOnlyRootFilesystem` (помечен как "no opinion" в Pod Security Standards). PSA покрывает privileged, hostPath, runAsNonRoot, seccomp, capabilities. Gatekeeper добирает `readOnlyRootFilesystem` и даёт CRD-based политики, которые сами аудируются.
+Используются два слоя. PSA `restricted` не проверяет `readOnlyRootFilesystem` и закрывает остальные базовые ограничения: privileged, hostPath, runAsNonRoot, seccomp, capabilities. Gatekeeper добавляет недостающее правило для `readOnlyRootFilesystem`.
 
 ## Порядок запуска
 
@@ -23,14 +23,17 @@ kubectl -n gatekeeper-system wait pod --all --for=condition=Ready --timeout=90s
 
 kubectl apply -f Task7/01-create-namespace.yaml
 kubectl apply -f Task7/gatekeeper/constraint-templates/
-sleep 5
+kubectl wait --for=jsonpath='{.status.created}'=true constrainttemplate/k8spsphostfilesystem --timeout=90s
+kubectl wait --for=jsonpath='{.status.created}'=true constrainttemplate/k8spspprivilegedcontainer --timeout=90s
+kubectl wait --for=jsonpath='{.status.created}'=true constrainttemplate/k8spspallowedusers --timeout=90s
+kubectl wait --for=jsonpath='{.status.created}'=true constrainttemplate/k8spspreadonlyrootfilesystem --timeout=90s
 kubectl apply -f Task7/gatekeeper/constraints/
 
 bash Task7/verify/verify-admission.sh
 bash Task7/verify/validate-security.sh
 ```
 
-Пауза между templates и constraints нужна -- Gatekeeper регистрирует CRD асинхронно.
+Перед применением constraints идёт явное ожидание `status.created=true` у всех `ConstraintTemplate`. Это надёжнее, чем фиксированная пауза, потому что Gatekeeper регистрирует CRD асинхронно.
 
 ## Ожидаемые результаты
 
@@ -44,7 +47,7 @@ bash Task7/verify/validate-security.sh
 | secure-manifests/03-secure.yaml | Admitted | -- |
 | test-gatekeeper-only (validate-security.sh) | Rejected | Gatekeeper only |
 
-Insecure manifests отклоняются по нескольким причинам сразу -- `restricted` кумулятивен, API server перечисляет все несоответствия (seccomp, capabilities и т. д.), а не только целевое.
+Insecure manifests отклоняются по нескольким причинам сразу: `restricted` кумулятивен, и API server перечисляет все несоответствия, а не только одно.
 
 `test-gatekeeper-only` проходит PSA `restricted`, но не имеет `readOnlyRootFilesystem: true`. PSA пропускает, Gatekeeper отклоняет.
 

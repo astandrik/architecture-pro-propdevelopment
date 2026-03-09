@@ -4,7 +4,7 @@ metadata:
   name: k8spspreadonlyrootfilesystem
   annotations:
     metadata.gatekeeper.sh/title: "Read Only Root Filesystem"
-    description: Requires readOnlyRootFilesystem: true on all containers.
+    description: "Requires readOnlyRootFilesystem: true on all containers."
 spec:
   crd:
     spec:

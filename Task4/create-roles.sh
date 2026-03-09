@@ -28,10 +28,6 @@ rules:
       - serviceaccounts
       - events
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-  - apiGroups: [""]
-    resources:
-      - pods/log
-    verbs: ["get", "list", "watch"]
   - apiGroups: ["apps"]
     resources:
       - deployments
@@ -62,10 +58,6 @@ rules:
       - configmaps
       - persistentvolumeclaims
       - events
-    verbs: ["get", "list", "watch"]
-  - apiGroups: [""]
-    resources:
-      - pods/log
     verbs: ["get", "list", "watch"]
   - apiGroups: ["apps"]
     resources:

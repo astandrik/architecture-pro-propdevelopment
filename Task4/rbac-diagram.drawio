@@ -49,10 +49,10 @@
         <mxCell id="OLkaa3oJmX88YrA9V8_d-281" parent="1" style="rounded=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=11;" value="cluster-admin&#xa;(встроенная)" vertex="1">
           <mxGeometry height="45" width="160" x="2410" y="1240" as="geometry" />
         </mxCell>
-        <mxCell id="OLkaa3oJmX88YrA9V8_d-282" parent="1" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" value="namespace-admin&#xa;CRUD без secrets" vertex="1">
+        <mxCell id="OLkaa3oJmX88YrA9V8_d-282" parent="1" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" value="namespace-admin&#xa;CRUD без secrets API и logs" vertex="1">
           <mxGeometry height="45" width="160" x="2410" y="1340" as="geometry" />
         </mxCell>
-        <mxCell id="OLkaa3oJmX88YrA9V8_d-283" parent="1" style="rounded=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" value="namespace-viewer&#xa;только чтение, без secrets" vertex="1">
+        <mxCell id="OLkaa3oJmX88YrA9V8_d-283" parent="1" style="rounded=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" value="namespace-viewer&#xa;чтение без secrets и logs" vertex="1">
           <mxGeometry height="45" width="160" x="2410" y="1440" as="geometry" />
         </mxCell>
         <mxCell id="OLkaa3oJmX88YrA9V8_d-284" parent="1" style="text;html=1;fontSize=13;fontStyle=1;align=center;" value="Namespaces" vertex="1">
@@ -107,10 +107,10 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OLkaa3oJmX88YrA9V8_d-300" edge="1" parent="1" source="OLkaa3oJmX88YrA9V8_d-282" style="edgeStyle=orthogonalEdgeStyle;rounded=1;fontStyle=2;fontSize=9;labelBackgroundColor=default;" target="OLkaa3oJmX88YrA9V8_d-286" value="CRUD без secrets">
+        <mxCell id="OLkaa3oJmX88YrA9V8_d-300" edge="1" parent="1" source="OLkaa3oJmX88YrA9V8_d-282" style="edgeStyle=orthogonalEdgeStyle;rounded=1;fontStyle=2;fontSize=9;labelBackgroundColor=default;" target="OLkaa3oJmX88YrA9V8_d-286" value="CRUD без secrets API и logs">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="OLkaa3oJmX88YrA9V8_d-301" edge="1" parent="1" source="OLkaa3oJmX88YrA9V8_d-283" style="edgeStyle=orthogonalEdgeStyle;rounded=1;fontStyle=2;fontSize=9;labelBackgroundColor=default;" target="OLkaa3oJmX88YrA9V8_d-287" value="get/list/watch без secrets">
+        <mxCell id="OLkaa3oJmX88YrA9V8_d-301" edge="1" parent="1" source="OLkaa3oJmX88YrA9V8_d-283" style="edgeStyle=orthogonalEdgeStyle;rounded=1;fontStyle=2;fontSize=9;labelBackgroundColor=default;" target="OLkaa3oJmX88YrA9V8_d-287" value="get/list/watch без secrets и logs">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="OLkaa3oJmX88YrA9V8_d-302" parent="1" style="text;html=1;fontSize=10;fontStyle=2;align=center;fontColor=#999999;" value="finance, data-processing: нет привязанных пользователей в демо" vertex="1">

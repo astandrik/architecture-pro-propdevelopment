@@ -16,6 +16,7 @@ fi
 create_user() {
   local USERNAME=$1
   local GROUP=$2
+  local NAMESPACE=${3:-}
   local CONTEXT_NAME="${USERNAME}-context"
 
   echo "=== Создание пользователя: ${USERNAME} (группа: ${GROUP}) ==="
@@ -52,9 +53,16 @@ EOF
     --client-certificate="${CERTS_DIR}/${USERNAME}.crt" \
     --client-key="${CERTS_DIR}/${USERNAME}.key"
 
-  kubectl config set-context "${CONTEXT_NAME}" \
-    --cluster="${CLUSTER_NAME}" \
-    --user="${USERNAME}"
+  if [ -n "${NAMESPACE}" ]; then
+    kubectl config set-context "${CONTEXT_NAME}" \
+      --cluster="${CLUSTER_NAME}" \
+      --user="${USERNAME}" \
+      --namespace="${NAMESPACE}"
+  else
+    kubectl config set-context "${CONTEXT_NAME}" \
+      --cluster="${CLUSTER_NAME}" \
+      --user="${USERNAME}"
+  fi
 
   echo "--- Пользователь ${USERNAME} создан, контекст: ${CONTEXT_NAME} ---"
   echo ""
@@ -64,10 +72,10 @@ EOF
 create_user "security-admin" "platform-admins"
 
 # Разработчик домена продаж — группа конфигурации (namespace-admin)
-create_user "dev-sales" "developers"
+create_user "dev-sales" "developers" "sales"
 
 # Бизнес-аналитик домена ЖКУ — группа просмотра (namespace-viewer)
-create_user "analyst-tenant" "viewers"
+create_user "analyst-tenant" "viewers" "tenant-services"
 
 echo "=== Все пользователи созданы ==="
 echo "Сертификаты сохранены в ${CERTS_DIR}/"

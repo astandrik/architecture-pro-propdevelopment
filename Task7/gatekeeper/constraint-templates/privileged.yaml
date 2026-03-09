@@ -4,7 +4,7 @@ metadata:
   name: k8spspprivilegedcontainer
   annotations:
     metadata.gatekeeper.sh/title: "Privileged Container"
-    description: Denies containers with privileged: true.
+    description: "Denies containers with privileged: true."
 spec:
   crd:
     spec:

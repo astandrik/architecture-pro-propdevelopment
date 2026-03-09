@@ -5,7 +5,7 @@
 1. Доступ к секретам:
    - Кто: `minikube-user` через impersonation от имени `system:serviceaccount:secure-ops:monitoring`
    - Где: namespace `kube-system`, ресурс `secrets` (verb: `list`, код ответа: 403 Forbidden)
-   - Почему подозрительно: SA `monitoring` из `secure-ops` пытается получить список секретов в `kube-system`. Прав у него нет — API server вернул 403. Перед этим выполнена проверка прав через `SelfSubjectAccessReview` (`kubectl auth can-i`) — типичная разведка перед эскалацией. В RBAC-модели из Task4 доступ к secrets есть только у группы `platform-admins`, роли `namespace-admin` и `namespace-viewer` secrets исключают.
+   - Почему подозрительно: SA `monitoring` из `secure-ops` пытается получить список секретов в `kube-system`. Прав у него нет — API server вернул 403. Перед этим выполнена проверка прав через `SelfSubjectAccessReview` (`kubectl auth can-i`) — типичная разведка перед эскалацией. В RBAC-модели из задания 4 прямой доступ к `secrets` API есть только у группы `platform-admins`, а роли `namespace-admin` и `namespace-viewer` такие запросы исключают.
 
 2. Привилегированные поды:
    - Кто: `minikube-user`
@@ -13,11 +13,11 @@
 
 3. Использование kubectl exec в чужом поде:
    - Кто: `minikube-user`
-   - Что делал: выполнил `cat /etc/resolv.conf` в поде `coredns-66bc5c9577-wpz4x` в `kube-system` (101 Switching Protocols — WebSocket для exec установлен). CoreDNS — системный компонент. Выполнение команд в таких подах даёт доступ к внутренней конфигурации кластера и сетевым привилегиям пода.
+   - Что делал: выполнил `kubectl exec` с командой `/coredns -version` в одном из pod'ов `coredns` в `kube-system` (101 Switching Protocols — WebSocket для exec установлен). CoreDNS — системный компонент. Сам факт выполнения команд в таком pod даёт доступ к внутренней конфигурации кластера и сетевым привилегиям пода.
 
 4. Создание RoleBinding с правами cluster-admin:
    - Кто: `minikube-user` (201 Created)
-   - К чему привело: SA `monitoring` в `secure-ops` получил привязку к ClusterRole `cluster-admin` через RoleBinding `escalate-binding`. В audit event это подтверждается полем `requestObject.roleRef`: `kind = ClusterRole`, `name = cluster-admin`. В рамках namespace SA теперь имеет полный доступ ко всем ресурсам, включая secrets и RBAC-объекты. В RBAC-модели из Task4 такие привязки делаются только группой `platform-admins` через ClusterRoleBinding.
+   - К чему привело: SA `monitoring` в `secure-ops` получил привязку к ClusterRole `cluster-admin` через RoleBinding `escalate-binding`. В audit event это подтверждается полем `requestObject.roleRef`: `kind = ClusterRole`, `name = cluster-admin`. В рамках namespace SA теперь имеет полный доступ ко всем ресурсам, включая прямой доступ к `secrets` API и RBAC-объектам. В RBAC-модели из задания 4 такие привязки делает только группа `platform-admins` через ClusterRoleBinding.
 
 5. Удаление audit-policy.yaml:
    - Кто: в `audit.log` не зафиксировано — API-запроса не было
