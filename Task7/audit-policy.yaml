@@ -1,0 +1,18 @@
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+  - level: RequestResponse
+    verbs: ["create", "delete", "update", "patch"]
+    resources:
+      - group: ""
+        resources: ["pods"]
+      - group: "templates.gatekeeper.sh"
+        resources: ["constrainttemplates"]
+      - group: "constraints.gatekeeper.sh"
+        resources: ["*"]
+  - level: RequestResponse
+    verbs: ["create", "delete", "update", "patch"]
+    resources:
+      - group: ""
+        resources: ["namespaces"]
+  - level: Metadata
