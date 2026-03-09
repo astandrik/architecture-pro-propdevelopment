@@ -1,0 +1,204 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8spspallowedusers
+  annotations:
+    metadata.gatekeeper.sh/title: "Allowed Users"
+    description: Requires runAsNonRoot or runAsUser != 0.
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sPSPAllowedUsers
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            exemptImages:
+              type: array
+              items:
+                type: string
+            runAsUser:
+              type: object
+              properties:
+                rule:
+                  type: string
+                  enum:
+                    - MustRunAs
+                    - MustRunAsNonRoot
+                    - RunAsAny
+                ranges:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      min:
+                        type: integer
+                      max:
+                        type: integer
+            runAsGroup:
+              type: object
+              properties:
+                rule:
+                  type: string
+                  enum:
+                    - MustRunAs
+                    - MayRunAs
+                    - RunAsAny
+                ranges:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      min:
+                        type: integer
+                      max:
+                        type: integer
+            supplementalGroups:
+              type: object
+              properties:
+                rule:
+                  type: string
+                  enum:
+                    - MustRunAs
+                    - MayRunAs
+                    - RunAsAny
+                ranges:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      min:
+                        type: integer
+                      max:
+                        type: integer
+            fsGroup:
+              type: object
+              properties:
+                rule:
+                  type: string
+                  enum:
+                    - MustRunAs
+                    - MayRunAs
+                    - RunAsAny
+                ranges:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      min:
+                        type: integer
+                      max:
+                        type: integer
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8spspallowedusers
+
+        violation[{"msg": msg}] {
+            fields := ["runAsUser", "runAsGroup", "supplementalGroups", "fsGroup"]
+            field := fields[_]
+            container := input_containers[_]
+            msg := get_type_violation(field, container)
+        }
+
+        get_type_violation(field, container) = msg {
+            field == "runAsUser"
+            params := input.parameters[field]
+            msg := get_user_violation(params, container)
+        }
+
+        get_type_violation(field, container) = msg {
+            field != "runAsUser"
+            params := input.parameters[field]
+            msg := get_violation(field, params, container)
+        }
+
+        get_user_violation(params, container) = msg {
+            rule := params.rule
+            provided_user := get_field_value("runAsUser", container, input.review)
+            not accept_users(rule, provided_user)
+            msg := sprintf("Container %v is attempting to run as disallowed user %v. Allowed runAsUser: %v", [container.name, provided_user, params])
+        }
+
+        get_user_violation(params, container) = msg {
+            not get_field_value("runAsUser", container, input.review)
+            params.rule = "MustRunAs"
+            msg := sprintf("Container %v is attempting to run without a required securityContext/runAsUser", [container.name])
+        }
+
+        get_user_violation(params, container) = msg {
+            params.rule = "MustRunAsNonRoot"
+            not get_field_value("runAsUser", container, input.review)
+            not get_field_value("runAsNonRoot", container, input.review)
+            msg := sprintf("Container %v is attempting to run without a required securityContext/runAsNonRoot or securityContext/runAsUser != 0", [container.name])
+        }
+
+        accept_users("RunAsAny", _)
+        accept_users("MustRunAsNonRoot", provided_user) { provided_user != 0 }
+        accept_users("MustRunAs", provided_user) {
+            ranges := input.parameters.runAsUser.ranges
+            is_in_range(provided_user, ranges)
+        }
+
+        get_violation(field, params, container) = msg {
+            rule := params.rule
+            provided_value := get_field_value(field, container, input.review)
+            not is_array(provided_value)
+            not accept_value(rule, provided_value, params.ranges)
+            msg := sprintf("Container %v is attempting to run as disallowed group %v. Allowed %v: %v", [container.name, provided_value, field, params])
+        }
+
+        get_violation(field, params, container) = msg {
+            rule := params.rule
+            array_value := get_field_value(field, container, input.review)
+            is_array(array_value)
+            provided_value := array_value[_]
+            not accept_value(rule, provided_value, params.ranges)
+            msg := sprintf("Container %v is attempting to run with disallowed supplementalGroups %v. Allowed %v: %v", [container.name, array_value, field, params])
+        }
+
+        get_violation(field, params, container) = msg {
+            not get_field_value(field, container, input.review)
+            params.rule == "MustRunAs"
+            msg := sprintf("Container %v is attempting to run without a required securityContext/%v. Allowed %v: %v", [container.name, field, field, params])
+        }
+
+        accept_value("RunAsAny", _, _)
+        accept_value("MayRunAs", provided_value, ranges) { is_in_range(provided_value, ranges) }
+        accept_value("MustRunAs", provided_value, ranges) { is_in_range(provided_value, ranges) }
+
+        get_field_value(field, container, _) = out {
+            out = container.securityContext[field]
+        }
+
+        get_field_value(field, container, review) = out {
+            not has_seccontext_field(field, container)
+            review.kind.kind == "Pod"
+            out = review.object.spec.securityContext[field]
+        }
+
+        is_in_range(val, ranges) {
+            val >= ranges[j].min
+            val <= ranges[j].max
+        }
+
+        has_seccontext_field(field, obj) {
+            obj.securityContext[field]
+        }
+
+        has_seccontext_field(field, obj) {
+            obj.securityContext[field] == false
+        }
+
+        input_containers[c] {
+            c := input.review.object.spec.containers[_]
+        }
+
+        input_containers[c] {
+            c := input.review.object.spec.initContainers[_]
+        }
+
+        input_containers[c] {
+            c := input.review.object.spec.ephemeralContainers[_]
+        }
